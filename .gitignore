@@ -9,3 +9,6 @@ bower_components
 !RecordRTC-to-Nodejs/node_modules
 
 package-lock.json
+
+# NPM
+.npmrc
