@@ -5378,16 +5378,22 @@ function MultiStreamsMixer(arrayOfMediaStreams, elementClass) {
         streams = streams || arrayOfMediaStreams;
 
         // via: @adrian-ber
-        streams.forEach(function(stream) {
-            if (!stream.getTracks().filter(function(t) {
-                    return t.kind === 'video';
-                }).length) {
-                return;
+        streams.forEach(stream => {
+            if (stream.getTracks().filter(function (t) {
+                return t.kind === 'video';
+            }).length) {
+                var video = getVideo(stream);
+                video.stream = stream;
+                videos.push(video);
             }
 
-            var video = getVideo(stream);
-            video.stream = stream;
-            videos.push(video);
+            if (stream.getTracks().filter(function (t) {
+                return t.kind === 'audio';
+            }).length && self.audioContext) {
+                var audioSource = self.audioContext.createMediaStreamSource(stream);
+                audioSource.connect(self.audioDestination);
+                self.audioSources.push(audioSource);
+            }
         });
     }
 
